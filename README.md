@@ -18,6 +18,11 @@ springcloud alibabacloud jdk17
     新闻中心
 
 ### how run?
+
+#### default swagger
+```shell
+http://127.0.0.1:8088/cas/doc.html
+```
 #### start nacos
 ```shell
 startup.cmd -m standalone
