@@ -8,6 +8,11 @@
     <!--
         latmn inc. kangaroo
     -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.0.8</version>
+    </parent>
 
     <groupId>com.latmn.kangaroo</groupId>
     <artifactId>kangaroo-bom</artifactId>
@@ -88,7 +93,7 @@
     </dependencyManagement>
 
 
-    <repositories>
+   <repositories>
         <repository>
             <id>cn-alibaba</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -96,10 +101,12 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
+
+
     <pluginRepositories>
         <pluginRepository>
             <id>cn-alibaba-plugin</id>
@@ -108,7 +115,7 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>

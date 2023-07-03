@@ -10,14 +10,15 @@ springcloud alibabacloud jdk17
 ### platform
 #### api
     统一api编写
-#### cas 
-    用户中心登录认证
+#### user 
+    用户中心
 #### mq  
     消息服务
 #### news 
     新闻中心
 
 ### how run?
+
 
 #### default swagger
 ```shell
