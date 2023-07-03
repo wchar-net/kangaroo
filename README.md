@@ -37,8 +37,7 @@ nacos
 nacos
 ```
 
-
-#### sql
-```shell
-
+#### run test 
+```
+当前 user 调用 news
 ```
