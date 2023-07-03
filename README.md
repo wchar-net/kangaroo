@@ -6,7 +6,12 @@ springcloud alibabacloud jdk17
 
 
 ### framework
-
+#### convention
+    web转换定义
+#### core
+    core
+#### test
+    测试framework
 ### platform
 #### api
     统一api编写
