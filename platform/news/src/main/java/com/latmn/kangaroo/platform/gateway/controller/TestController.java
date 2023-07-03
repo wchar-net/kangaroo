@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.controller;
+package com.latmn.kangaroo.platform.gateway.controller;
 
 
 import com.latmn.kangaroo.platform.api.news.domain.NewsTestDomain;

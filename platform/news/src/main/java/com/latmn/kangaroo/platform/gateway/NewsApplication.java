@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news;
+package com.latmn.kangaroo.platform.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

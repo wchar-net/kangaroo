@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.config;
+package com.latmn.kangaroo.platform.gateway.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
