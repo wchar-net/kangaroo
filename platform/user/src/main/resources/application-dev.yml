@@ -23,6 +23,10 @@ spring:
   web:
     resources:
       add-mappings: false
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 #mybatis plus
 mybatis-plus:

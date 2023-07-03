@@ -31,7 +31,7 @@ public class TestController {
     public NewsTestDomain testFeign() {
         Result<NewsTestDomain> result = newsFeign.sayHello();
         if (!"1".equalsIgnoreCase(result.getCode())) {
-            throw new IllegalArgumentException(result.getMessage());
+            throw new RuntimeException(result.getErrMessage());
         }
         return result.getData();
     }

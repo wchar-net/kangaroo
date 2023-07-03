@@ -16,8 +16,10 @@ import java.util.List;
 public class PageResult<T> implements Serializable {
     private String code;
     private String message;
+    private String errMessage;
     private String requestId;
     private String requestPath;
     private Long total;
     private List<T> data;
+    private T errData;
 }

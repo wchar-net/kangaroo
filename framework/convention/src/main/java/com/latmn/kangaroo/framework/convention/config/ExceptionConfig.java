@@ -1,7 +1,6 @@
 
 package com.latmn.kangaroo.framework.convention.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.latmn.kangaroo.framework.convention.core.ConventionCode;
 import com.latmn.kangaroo.framework.convention.interceptor.impl.TraceIdInterceptor;
 import com.latmn.kangaroo.framework.core.result.FieldResult;
@@ -40,9 +39,6 @@ public class ExceptionConfig {
     @Autowired
     private ConventionCode conventionCode;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @ExceptionHandler(ConstraintViolationException.class)
     public Result handleConstraintViolationException(ConstraintViolationException ex, WebRequest webRequest) {
         ex.printStackTrace();
@@ -66,8 +62,8 @@ public class ExceptionConfig {
         }
         Result result = new Result();
         result.setCode(conventionCode.paramValidFailCode());
-        result.setMessage(conventionCode.paramValidFailMessage());
-        result.setData(errors);
+        result.setErrMessage(conventionCode.paramValidFailMessage());
+        result.setErrData(errors);
         handlerResult(result, webRequest);
         return result;
     }
@@ -82,8 +78,8 @@ public class ExceptionConfig {
         }
         Result result = new Result();
         result.setCode(conventionCode.paramValidFailCode());
-        result.setMessage(conventionCode.paramValidFailMessage());
-        result.setData(errors);
+        result.setErrMessage(conventionCode.paramValidFailMessage());
+        result.setErrData(errors);
         handlerResult(result, webRequest);
         return result;
     }
@@ -98,8 +94,8 @@ public class ExceptionConfig {
         }
         Result result = new Result();
         result.setCode(conventionCode.paramValidFailCode());
-        result.setMessage(conventionCode.paramValidFailMessage());
-        result.setData(errors);
+        result.setErrMessage(conventionCode.paramValidFailMessage());
+        result.setErrData(errors);
         handlerResult(result, webRequest);
         return result;
     }
@@ -110,8 +106,8 @@ public class ExceptionConfig {
         e.printStackTrace();
         Result result = new Result();
         result.setCode(conventionCode.errorCode());
-        result.setMessage(e.getMessage());
-        result.setData(e.getMessage());
+        result.setErrMessage(e.getMessage());
+        result.setErrData(e.getMessage());
         handlerResult(result, webRequest);
         return result;
     }
@@ -120,8 +116,8 @@ public class ExceptionConfig {
     public Result handleNoHandlerFound(NoHandlerFoundException e, WebRequest request) {
         Result result = new Result<>();
         result.setCode(conventionCode.errorCode());
-        result.setMessage(e.getMessage());
-        result.setMessage(e.getMessage());
+        result.setErrMessage(e.getMessage());
+        result.setErrData(e.getMessage());
         handlerResult(result, request);
         return result;
     }

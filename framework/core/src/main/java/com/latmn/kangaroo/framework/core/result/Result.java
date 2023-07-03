@@ -15,7 +15,9 @@ import java.io.Serializable;
 public class Result<T> implements Serializable {
     private String code;
     private String message;
+    private String errMessage;
     private String requestId;
     private String requestPath;
     private T data;
+    private Object errData;
 }
