@@ -34,8 +34,8 @@ public class SpringDocConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("cas")
-                .displayName("用户中心")
+                .group("news")
+                .displayName("新闻中心")
                 .pathsToMatch("**", "/**")
                 .build();
     }
