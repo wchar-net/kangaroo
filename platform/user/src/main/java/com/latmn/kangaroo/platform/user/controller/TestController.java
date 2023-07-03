@@ -1,5 +1,6 @@
 package com.latmn.kangaroo.platform.user.controller;
 
+import com.latmn.kangaroo.framework.core.result.PageResult;
 import com.latmn.kangaroo.platform.api.news.NewsFeign;
 import com.latmn.kangaroo.platform.api.news.domain.NewsTestDomain;
 import com.latmn.kangaroo.framework.core.result.Result;
@@ -24,6 +25,12 @@ public class TestController {
     public TestController(TestService testService, NewsFeign newsFeign) {
         this.testService = testService;
         this.newsFeign = newsFeign;
+    }
+
+    @GetMapping("/testFeign2")
+    public PageResult<NewsTestDomain> testFeign2() {
+        PageResult<NewsTestDomain> page = newsFeign.page(2, 50);
+        return page;
     }
 
 

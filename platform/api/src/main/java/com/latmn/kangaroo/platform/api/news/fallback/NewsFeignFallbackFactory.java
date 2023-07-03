@@ -1,5 +1,6 @@
 package com.latmn.kangaroo.platform.api.news.fallback;
 
+import com.latmn.kangaroo.framework.core.result.PageResult;
 import com.latmn.kangaroo.platform.api.news.NewsFeign;
 import com.latmn.kangaroo.platform.api.news.domain.NewsTestDomain;
 import com.latmn.kangaroo.framework.core.result.Result;
@@ -26,6 +27,14 @@ public class NewsFeignFallbackFactory implements FallbackFactory<NewsFeign> {
                 Result result = new Result();
                 result.setCode("0");
                 result.setErrMessage("news调用失败! sayHello2!");
+                return result;
+            }
+
+            @Override
+            public PageResult<NewsTestDomain> page(Integer pageIndex, Integer pageSize) {
+                PageResult result = new PageResult();
+                result.setCode("0");
+                result.setErrMessage("news调用失败! page!");
                 return result;
             }
         };
