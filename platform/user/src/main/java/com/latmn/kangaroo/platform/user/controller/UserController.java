@@ -2,6 +2,7 @@ package com.latmn.kangaroo.platform.user.controller;
 
 
 import com.latmn.kangaroo.platform.user.model.vo.UserLoginVo;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
+
+    @Operation(summary = "登录")
     @PostMapping("/login")
     public String login(
             @Valid @RequestBody UserLoginVo userLoginVo
