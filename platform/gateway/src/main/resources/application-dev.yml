@@ -15,18 +15,18 @@ spring:
       discovery:
         locator:
           enabled: false
-          lower-case-service-id: true
-      routes:
-        - id: news
-          uri: lb://news
-          predicates:
-            - Path=/news/**
-          filters:
-            - RewritePath=/news(?<segment>/?.*), /news$\{segment}
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
-        - id: user
-          uri: lb://user
-          predicates:
-            - Path=/user/**
-          filters:
-            - RewritePath=/user(?<segment>/?.*), /user$\{segment}
+
+jwt.secret: kangaroo
+
+ds.gateway.uri: r2dbc:mysql://root:123456@127.0.0.1/gateway
+ds.user.uri: r2dbc:mysql://root:123456@127.0.0.1/user
+
+logging:
+  level:
+    io:
+      r2dbc: DEBUG

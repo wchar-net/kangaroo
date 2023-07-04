@@ -5,6 +5,8 @@ import com.latmn.kangaroo.framework.convention.core.ConventionCode;
 import com.latmn.kangaroo.framework.convention.interceptor.impl.TraceIdInterceptor;
 import com.latmn.kangaroo.framework.core.result.FieldResult;
 import com.latmn.kangaroo.framework.core.result.Result;
+import com.latmn.kangaroo.framework.core.util.ExceptionUtil;
+import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -27,7 +29,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 
 @RestControllerAdvice
@@ -41,7 +42,6 @@ public class ExceptionConfig {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public Result handleConstraintViolationException(ConstraintViolationException ex, WebRequest webRequest) {
-        ex.printStackTrace();
         Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
         List<FieldResult> errors = new ArrayList<>();
         for (ConstraintViolation<?> violation : constraintViolations) {
@@ -65,13 +65,13 @@ public class ExceptionConfig {
         result.setErrMessage(conventionCode.paramValidFailMessage());
         result.setErrData(errors);
         handlerResult(result, webRequest);
+        logger.error(ex.getMessage(), ex);
         return result;
     }
 
 
     @ExceptionHandler(BindException.class)
     public Result handleBindException(BindException ex, WebRequest webRequest) throws BindException {
-        ex.printStackTrace();
         List<FieldResult> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(new FieldResult(error.getField(), error.getDefaultMessage(), error.getRejectedValue()));
@@ -81,13 +81,13 @@ public class ExceptionConfig {
         result.setErrMessage(conventionCode.paramValidFailMessage());
         result.setErrData(errors);
         handlerResult(result, webRequest);
+        logger.error(ex.getMessage(), ex);
         return result;
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest webRequest) throws MethodArgumentNotValidException {
-        ex.printStackTrace();
         List<FieldResult> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(new FieldResult(error.getField(), error.getDefaultMessage(), error.getRejectedValue()));
@@ -97,44 +97,50 @@ public class ExceptionConfig {
         result.setErrMessage(conventionCode.paramValidFailMessage());
         result.setErrData(errors);
         handlerResult(result, webRequest);
+        logger.error(ex.getMessage(), ex);
         return result;
     }
 
 
     @ExceptionHandler({Exception.class})
     public Result handlerException(Exception e, WebRequest webRequest) {
-        e.printStackTrace();
         Result result = new Result();
         result.setCode(conventionCode.errorCode());
-        result.setErrMessage(e.getMessage());
-        result.setErrData(e.getMessage());
+        if (!StringUtils.hasText(e.getMessage())) {
+            result.setErrMessage(ExceptionUtil.getStackTrace(e));
+        } else {
+            result.setErrMessage(e.getMessage());
+            result.setErrData(e.getMessage());
+        }
         handlerResult(result, webRequest);
+        logger.error(e.getMessage(), e);
         return result;
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public Result handleNoHandlerFound(NoHandlerFoundException e, WebRequest request) {
+        logger.error(e.getMessage(), e);
         Result result = new Result<>();
         result.setCode(conventionCode.errorCode());
         result.setErrMessage(e.getMessage());
         result.setErrData(e.getMessage());
         handlerResult(result, request);
+        logger.error(e.getMessage(), e);
         return result;
     }
 
     private void handlerResult(Result result, WebRequest webRequest) {
         String requestId = webRequest.getHeader(TraceIdInterceptor.TRACE_ID);
+        NativeWebRequest nativeWebRequest = (NativeWebRequest) webRequest;
+        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
+        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
         if (!StringUtils.hasText(requestId)) {
-            requestId = UUID.randomUUID().toString().replaceAll("-", "");
+            requestId = TraceIdUtil.uuid32();
             MDC.clear();
             MDC.put(TraceIdInterceptor.TRACE_ID, requestId);
-            NativeWebRequest nativeWebRequest = (NativeWebRequest) webRequest;
-            HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-            HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
             response.addHeader(TraceIdInterceptor.TRACE_ID, requestId);
-            result.setRequestId(requestId);
-            result.setRequestPath(request.getRequestURI());
         }
-        logger.error("error: {}", result.getMessage());
+        result.setRequestId(requestId);
+        result.setRequestPath(request.getRequestURI());
     }
 }

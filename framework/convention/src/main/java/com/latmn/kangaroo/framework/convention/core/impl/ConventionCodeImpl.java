@@ -1,16 +1,17 @@
 package com.latmn.kangaroo.framework.convention.core.impl;
 
 import com.latmn.kangaroo.framework.convention.core.ConventionCode;
+import com.latmn.kangaroo.framework.core.define.Define;
 
 public class ConventionCodeImpl implements ConventionCode {
     @Override
     public String successCode() {
-        return "1";
+        return Define.SUCCESS_CODE;
     }
 
     @Override
     public String errorCode() {
-        return "0";
+        return Define.ERROR_CODE;
     }
 
     @Override
