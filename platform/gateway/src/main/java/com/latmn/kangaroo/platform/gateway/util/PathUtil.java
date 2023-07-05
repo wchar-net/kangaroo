@@ -11,7 +11,7 @@ public class PathUtil {
             return false;
         }
         for (String item : pathList) {
-            boolean flag = new AntPathMatcher().match(path, item);
+            boolean flag = new AntPathMatcher().match(item,path);
             if (flag) {
                 return true;
             }
