@@ -3,6 +3,8 @@ package com.latmn.kangaroo.framework.convention.config;
 
 import com.latmn.kangaroo.framework.convention.core.ConventionCode;
 import com.latmn.kangaroo.framework.convention.interceptor.impl.TraceIdInterceptor;
+import com.latmn.kangaroo.framework.convention.prop.ExceptionProp;
+import com.latmn.kangaroo.framework.core.exception.KangarooException;
 import com.latmn.kangaroo.framework.core.result.FieldResult;
 import com.latmn.kangaroo.framework.core.result.Result;
 import com.latmn.kangaroo.framework.core.util.ExceptionUtil;
@@ -15,7 +17,6 @@ import jakarta.validation.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -37,8 +38,13 @@ public class ExceptionConfig {
     private final Logger logger = LoggerFactory.getLogger(ExceptionConfig.class);
 
 
-    @Autowired
-    private ConventionCode conventionCode;
+    private final ConventionCode conventionCode;
+    private final ExceptionProp exceptionProp;
+
+    public ExceptionConfig(ConventionCode conventionCode, ExceptionProp exceptionProp) {
+        this.conventionCode = conventionCode;
+        this.exceptionProp = exceptionProp;
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public Result handleConstraintViolationException(ConstraintViolationException ex, WebRequest webRequest) {
@@ -60,10 +66,7 @@ public class ExceptionConfig {
             }
             errors.add(new FieldResult(name, violation.getMessage(), violation.getInvalidValue()));
         }
-        Result result = new Result();
-        result.setCode(conventionCode.paramValidFailCode());
-        result.setErrMessage(conventionCode.paramValidFailMessage());
-        result.setErrData(errors);
+        Result<Object> result = Result.builder().code(conventionCode.paramValidFailCode()).errData(errors).errMessage(conventionCode.paramValidFailMessage()).build();
         handlerResult(result, webRequest);
         logger.error(ex.getMessage(), ex);
         return result;
@@ -71,15 +74,13 @@ public class ExceptionConfig {
 
 
     @ExceptionHandler(BindException.class)
-    public Result handleBindException(BindException ex, WebRequest webRequest) throws BindException {
+    public Result handleBindException(BindException ex, WebRequest webRequest) {
         List<FieldResult> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(new FieldResult(error.getField(), error.getDefaultMessage(), error.getRejectedValue()));
         }
-        Result result = new Result();
-        result.setCode(conventionCode.paramValidFailCode());
-        result.setErrMessage(conventionCode.paramValidFailMessage());
-        result.setErrData(errors);
+
+        Result<Object> result = Result.builder().code(conventionCode.paramValidFailCode()).errData(errors).errMessage(conventionCode.paramValidFailMessage()).build();
         handlerResult(result, webRequest);
         logger.error(ex.getMessage(), ex);
         return result;
@@ -87,27 +88,44 @@ public class ExceptionConfig {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest webRequest) throws MethodArgumentNotValidException {
+    public Result handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest webRequest) {
         List<FieldResult> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(new FieldResult(error.getField(), error.getDefaultMessage(), error.getRejectedValue()));
         }
-        Result result = new Result();
-        result.setCode(conventionCode.paramValidFailCode());
-        result.setErrMessage(conventionCode.paramValidFailMessage());
-        result.setErrData(errors);
+        Result<Object> result = Result.builder().code(conventionCode.paramValidFailCode()).errData(errors).errMessage(conventionCode.paramValidFailMessage()).build();
         handlerResult(result, webRequest);
         logger.error(ex.getMessage(), ex);
         return result;
     }
 
 
+    @ExceptionHandler({KangarooException.class})
+    public Result handlerException(KangarooException e, WebRequest webRequest) {
+        Result result = new Result();
+        result.setCode(StringUtils.hasText(e.getErrCode()) ? e.getErrCode() : conventionCode.errorCode());
+        result.setMessage(StringUtils.hasText(e.getErrMessage()) ? e.getErrMessage() : conventionCode.errorMessage());
+        if (!StringUtils.hasText(e.getMessage())) {
+            if(exceptionProp.isPrintStackTrace()){
+                result.setErrMessage(ExceptionUtil.getStackTrace(e));
+            }
+        } else {
+            result.setErrMessage(e.getMessage());
+            result.setErrData(e.getMessage());
+        }
+        handlerResult(result, webRequest);
+        logger.error(e.getMessage(), e);
+        return result;
+    }
+
     @ExceptionHandler({Exception.class})
     public Result handlerException(Exception e, WebRequest webRequest) {
         Result result = new Result();
         result.setCode(conventionCode.errorCode());
         if (!StringUtils.hasText(e.getMessage())) {
-            result.setErrMessage(ExceptionUtil.getStackTrace(e));
+            if(exceptionProp.isPrintStackTrace()){
+                result.setErrMessage(ExceptionUtil.getStackTrace(e));
+            }
         } else {
             result.setErrMessage(e.getMessage());
             result.setErrData(e.getMessage());

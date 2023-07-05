@@ -2,6 +2,7 @@ package com.latmn.kangaroo.framework.core.domain;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Builder
-public class UserDomain {
+public class UserDomain implements Serializable {
     private String id;
     private String userCode;
     private String nickName;
@@ -17,6 +18,7 @@ public class UserDomain {
     private Integer userState;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private LocalDateTime expireTime;
     private String createBy;
     private String updateBy;
 }

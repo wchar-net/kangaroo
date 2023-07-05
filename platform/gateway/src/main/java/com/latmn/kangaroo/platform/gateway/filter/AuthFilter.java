@@ -1,6 +1,5 @@
 package com.latmn.kangaroo.platform.gateway.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.latmn.kangaroo.framework.core.define.Define;
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
 import com.latmn.kangaroo.platform.gateway.repository.DbRouteRepository;
@@ -22,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
@@ -31,18 +29,18 @@ import static org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
     private final Logger logger = LoggerFactory.getLogger(AuthFilter.class);
-    private final ReactiveRedisOperations<String, String> reactiveRedisOperations;
+    private final ReactiveRedisOperations<String, Object> reactiveRedisOperations;
     private final RBACUserRepository rbacUserRepository;
 
     private final DbRouteRepository dbRouteRepository;
 
-    private final ObjectMapper objectMapper;
 
-    public AuthFilter(ReactiveRedisOperations<String, String> reactiveRedisOperations, RBACUserRepository rbacUserRepository, DbRouteRepository dbRouteRepository, ObjectMapper objectMapper) {
+    public AuthFilter(ReactiveRedisOperations<String, Object> reactiveRedisOperations,
+                      RBACUserRepository rbacUserRepository,
+                      DbRouteRepository dbRouteRepository) {
         this.reactiveRedisOperations = reactiveRedisOperations;
         this.rbacUserRepository = rbacUserRepository;
         this.dbRouteRepository = dbRouteRepository;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -75,26 +73,19 @@ public class AuthFilter implements GlobalFilter, Ordered {
                             return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_ERROR_MESSAGE, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
                         }
                         //验证redis
-                        return reactiveRedisOperations.opsForValue().get(apiKey)
+                        return reactiveRedisOperations.opsForValue().get(Define.CACHE_USER_PREFIX + apiKey)
                                 .switchIfEmpty(Mono.defer(() -> Mono.just(Define.EMPTY_STR)))
                                 .flatMap(it -> {
-                                    String userJsonStr = String.valueOf(it);
-                                    if (StringUtils.hasText(userJsonStr)) {
+                                    if (null != it) {
                                         //检查状态
-                                        UserDomain userDomain;
-                                        try {
-                                            userDomain = objectMapper.readValue(userJsonStr, UserDomain.class);
-                                        } catch (IOException e) {
-                                            logger.info("redis value 解析失败 非法用户信息!");
-                                            return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_TOKEN_ILLEGAL, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
-                                        }
+                                        UserDomain userDomain = (UserDomain) it;
                                         if (null == userDomain || !StringUtils.hasText(userDomain.getUserCode()) || !StringUtils.hasText(userDomain.getId())) {
                                             return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_ERROR_MESSAGE, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
                                         }
                                         return rbacUserRepository.findUser(userDomain.getId())
                                                 .defaultIfEmpty(UserDomain.builder().id("-1").build())
                                                 .flatMap(user -> {
-                                                    if ("-1" .equalsIgnoreCase(user.getId())) {
+                                                    if ("-1".equalsIgnoreCase(user.getId())) {
                                                         logger.info(Define.AUTH_TOKEN_ABSENT + ": {}", userDomain);
                                                         return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_TOKEN_ABSENT, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
                                                     } else {

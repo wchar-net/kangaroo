@@ -33,6 +33,7 @@ http://127.0.0.1:8088/cas/doc.html
 ```
 #### start nacos
 ```sh
+startup.cmd -m standalone
 http://127.0.0.1:8848/nacos/#/login
 nacos
 nacos

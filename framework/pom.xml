@@ -16,6 +16,7 @@
         <module>convention</module>
         <module>core</module>
         <module>test</module>
+        <module>redis</module>
     </modules>
 
 

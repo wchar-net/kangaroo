@@ -38,6 +38,7 @@
         <logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
         <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
         <r2dbc-mysql.version>0.8.2.RELEASE</r2dbc-mysql.version>
+        <hutool-captcha.version>5.8.20</hutool-captcha.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-captcha</artifactId>
+                <version>${hutool-captcha.version}</version>
+            </dependency>
             <dependency>
                 <groupId>dev.miku</groupId>
                 <artifactId>r2dbc-mysql</artifactId>

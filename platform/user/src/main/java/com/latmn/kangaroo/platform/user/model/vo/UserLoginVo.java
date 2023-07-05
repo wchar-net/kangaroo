@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Schema(name = "登录", description = "登录")
@@ -15,7 +17,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @AllArgsConstructor
 @Builder
 @Data
-public class UserLoginVo {
+public class UserLoginVo implements Serializable {
     @NotEmpty(message = "用户编码不能为空")
     @Schema(description = "用户编码", requiredMode = REQUIRED)
     private String userCode;
