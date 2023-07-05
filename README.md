@@ -1,13 +1,13 @@
 # latmn inc. kangaroo
 
-```shell
-springcloud alibabacloud jdk17
-```
+### 表描述
+基于 `SpringCloud` `AlibabaCloud` `jdk17` `redis` `mysql` 
 
-#### *明天计划 gateway rbac鉴权*
+采用 Spring Gateway Uri鉴权
 
+业余时间 正在不断完善中
 
-### framework
+### framework 
 #### convention
     web转换定义
 #### core
@@ -24,13 +24,20 @@ springcloud alibabacloud jdk17
 #### news 
     新闻中心
 
-### how run?
 
+<hr />
 
-#### default swagger
-```shell
-http://127.0.0.1:8088/cas/doc.html
-```
+### swagger 
+路径: `/doc.html`
+
+例如: http://127.0.0.1:8088/user/doc.html
+
+### 运行
+
+#### 数据库 导入
+`gateway.sql`
+`user.sql`
+
 #### start nacos
 ```sh
 startup.cmd -m standalone
@@ -39,7 +46,7 @@ nacos
 nacos
 ```
 
-#### run test 
+#### feign example
 ```
 当前 user 调用 news
 ```

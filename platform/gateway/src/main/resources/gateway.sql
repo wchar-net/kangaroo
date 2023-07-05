@@ -11,7 +11,7 @@
  Target Server Version : 101102
  File Encoding         : 65001
 
- Date: 04/07/2023 17:54:02
+ Date: 05/07/2023 13:26:55
 */
 
 SET NAMES utf8mb4;
@@ -60,7 +60,10 @@ CREATE TABLE `wl`  (
 -- Records of wl
 -- ----------------------------
 INSERT INTO `wl` VALUES ('01459ef1f4op84fcf92a41b9ffa4f7357', '/user/doc.html', 'swagger', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `wl` VALUES ('11cb1ad64e66766c16ef80fbe6c1f0f2', '/**/favicon.ico', '小站标', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `wl` VALUES ('68867907f0a34367bc32eef24bbfe05e', '/user/login', '登录接口', 1, '2023-07-04 16:42:17', NULL, NULL, NULL);
 INSERT INTO `wl` VALUES ('7259ef1f42624fcf92a41b9ffa4f7530', '/user/getCaptcha', '获取验证码', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `wl` VALUES ('aaab42ee58a24e348979b273c2866442', '/**/webjars/**', '静态资源', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `wl` VALUES ('cda91d9c316045789a2a5d37f1c72785', '/**/v3/api-docs/**', 'swagger', 1, NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
