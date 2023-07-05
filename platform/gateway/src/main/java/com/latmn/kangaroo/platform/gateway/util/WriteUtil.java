@@ -16,13 +16,8 @@ import java.util.Arrays;
 
 public class WriteUtil {
 
-    public static Result authFailResult(String codeMsg,String errMsg,String requestId, String requestPath) {
-        Result result = new Result();
-        result.setCode(Define.AUTH_ERROR_CODE);
-        result.setErrMessage(Define.AUTH_ERROR_MESSAGE);
-        result.setRequestId(requestId);
-        result.setRequestPath(requestPath);
-        return result;
+    public static Result authFailResult(String codeMsg, String errMsg, String requestId, String requestPath) {
+        return Result.builder().code(codeMsg).errMessage(errMsg).requestId(requestId).requestPath(requestPath).build();
     }
 
     public static Mono<Void> error(ServerWebExchange exchange, Result result, HttpStatusCode status) {
@@ -34,7 +29,7 @@ public class WriteUtil {
             return exchange.getResponse().writeWith(Flux.just(buffer));
         } catch (IOException e) {
             e.printStackTrace();
-            DataBuffer buffer = exchange.getResponse().bufferFactory().wrap("" .getBytes(StandardCharsets.UTF_8));
+            DataBuffer buffer = exchange.getResponse().bufferFactory().wrap("".getBytes(StandardCharsets.UTF_8));
             return exchange.getResponse().writeWith(Flux.just(buffer));
         }
     }

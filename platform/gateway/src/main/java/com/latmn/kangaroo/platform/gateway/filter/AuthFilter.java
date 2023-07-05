@@ -4,6 +4,7 @@ import com.latmn.kangaroo.framework.core.define.Define;
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
 import com.latmn.kangaroo.platform.gateway.repository.DbRouteRepository;
 import com.latmn.kangaroo.platform.gateway.repository.RBACUserRepository;
+import com.latmn.kangaroo.platform.gateway.util.PathUtil;
 import com.latmn.kangaroo.platform.gateway.util.WriteUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -46,17 +46,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        //静态资源
-        AntPathMatcher antPathMatcher = new AntPathMatcher();
-        boolean matchWebJars = antPathMatcher.match("/**/webjars/**", request.getPath().toString());
-        boolean matchSwaggerConfig = antPathMatcher.match("/**/v3/api-docs/**", request.getPath().toString());
-        if (matchWebJars || matchSwaggerConfig) {
-            return chain.filter(exchange);
-        }
-        //白名单
-        return dbRouteRepository.countWL(request.getPath().toString())
-                .flatMap(count -> {
-                    if (count > 0) {
+        return dbRouteRepository.findAllWl()
+                .flatMap(wl -> {
+                    //白名单
+                    if (PathUtil.pathMatch(request.getPath().toString(), wl)) {
                         return chain.filter(exchange);
                     } else {
                         //获取头部信息
@@ -96,7 +89,17 @@ public class AuthFilter implements GlobalFilter, Ordered {
                                                         } else {
                                                             if (1 == userState) {
                                                                 reactiveRedisOperations.expire(apiKey, Duration.ofDays(30)).subscribe();
-                                                                return chain.filter(exchange);
+                                                                //url鉴权
+                                                                return rbacUserRepository.findAllUserUri(userDomain.getId())
+                                                                        .flatMap(userUri -> {
+                                                                            boolean flag = PathUtil.pathMatch(request.getPath().toString(), userUri);
+                                                                            if (flag) {
+                                                                                return chain.filter(exchange);
+                                                                            } else {
+                                                                                logger.info("无权限访问! user: {}  path: {}", userDomain, request.getPath());
+                                                                                return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.PATH_ACCESS_NOT_POWER, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
+                                                                            }
+                                                                        });
                                                             } else {
                                                                 logger.info("用户状态 != 1: {}", userDomain);
                                                                 return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_TOKEN_ABSENT, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);

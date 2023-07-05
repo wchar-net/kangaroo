@@ -12,6 +12,7 @@ import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 @Service
@@ -27,7 +28,42 @@ public class RBACUserRepositoryImpl implements RBACUserRepository {
         this.connectionFactory = connectionFactory;
     }
 
-
+    @Override
+    public Mono<List<String>> findAllUserUri(String userId) {
+        String sql = """
+                SELECT
+                	rp.power_uri as powerUri
+                FROM
+                	rbac_role role,
+                	rbac_role_power power,
+                	rbac_power rp
+                WHERE
+                	role.del_flag = 1
+                	AND power.del_flag = 1
+                	AND power.role_id = role.id
+                	AND rp.id = power.power_id
+                	AND rp.del_flag = 1
+                	AND role.id IN (
+                	SELECT
+                		r.role_id
+                	FROM
+                		rbac_user u,
+                		rbac_user_role r
+                	WHERE
+                		u.del_flag = 1
+                		AND u.id = ?
+                		AND r.del_flag = '1'
+                	AND r.user_id = u.id
+                	)
+                """;
+        MySqlConnectionFactory mySqlConnectionFactory = (MySqlConnectionFactory) connectionFactory;
+        Mono<Connection> connection = Mono.from(mySqlConnectionFactory.create());
+        return connection.flatMapMany(conn -> conn.createStatement(sql).bind(0, userId).execute())
+                .flatMap(result -> result.map((row, meta) -> {
+                    String uri = (String) row.get("powerUri");
+                    return uri;
+                })).collectList();
+    }
     @Override
     public Mono<UserDomain> findUser(String userId) {
         /*  todo r2dbc mysql drive bind bug
@@ -49,6 +85,5 @@ public class RBACUserRepositoryImpl implements RBACUserRepository {
                 .build();
         return connection.flatMapMany(conn -> conn.createStatement(sql).bind(0, 1).bind(1, userId).execute())
                 .flatMap(result -> result.map(mappingSimpleRbacUser)).take(1).next();
-
     }
 }

@@ -5,12 +5,15 @@ import com.latmn.kangaroo.platform.gateway.model.po.DbRoutePo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 
 public interface DbRouteRepository {
     Flux<DbRoutePo> findAll();
 
+
     /**
-     * 白名单
+     * 获取所有白名单
      */
-    Mono<Long> countWL(String requestPath);
+    Mono<List<String>> findAllWl();
 }
