@@ -1,7 +1,7 @@
-package com.latmn.kangaroo.platform.news.repository;
+package com.latmn.kangaroo.platform.gateway.repository;
 
 
-import com.latmn.kangaroo.platform.news.model.po.DbRoutePo;
+import com.latmn.kangaroo.platform.gateway.model.po.DbRoutePo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

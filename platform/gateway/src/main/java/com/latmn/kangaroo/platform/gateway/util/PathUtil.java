@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.util;
+package com.latmn.kangaroo.platform.gateway.util;
 
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;

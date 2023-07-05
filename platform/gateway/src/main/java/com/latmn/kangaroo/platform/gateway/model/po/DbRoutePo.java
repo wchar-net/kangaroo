@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.model.po;
+package com.latmn.kangaroo.platform.gateway.model.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

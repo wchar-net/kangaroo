@@ -1,7 +1,7 @@
-package com.latmn.kangaroo.platform.news.repository.impl;
+package com.latmn.kangaroo.platform.gateway.repository.impl;
 
-import com.latmn.kangaroo.platform.news.model.po.DbRoutePo;
-import com.latmn.kangaroo.platform.news.repository.DbRouteRepository;
+import com.latmn.kangaroo.platform.gateway.model.po.DbRoutePo;
+import com.latmn.kangaroo.platform.gateway.repository.DbRouteRepository;
 import dev.miku.r2dbc.mysql.MySqlConnectionFactory;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;

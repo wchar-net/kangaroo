@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.repository;
+package com.latmn.kangaroo.platform.gateway.repository;
 
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
 import reactor.core.publisher.Mono;

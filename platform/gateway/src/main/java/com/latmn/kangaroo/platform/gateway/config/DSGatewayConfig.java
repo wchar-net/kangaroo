@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.config;
+package com.latmn.kangaroo.platform.gateway.config;
 
 
 import io.r2dbc.spi.ConnectionFactories;
@@ -15,21 +15,21 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.core.DatabaseClient;
 
 @Configuration
-@EnableR2dbcRepositories(entityOperationsRef = "dsUserEntityTemplate")
-public class DsUserConfig {
+@EnableR2dbcRepositories(entityOperationsRef = "dsGatewayEntityTemplate")
+public class DSGatewayConfig {
 
-    @Value("${ds.user.uri}")
-    private String dsUserUri;
+    @Value("${ds.gateway.uri}")
+    private String dsGatewayUri;
 
     @Bean()
-    @Qualifier("dsUserConnectionFactory")
-    public ConnectionFactory dsUserConnectionFactory() {
-        return ConnectionFactories.get(dsUserUri);
+    @Qualifier("dsGatewayConnectionFactory")
+    public ConnectionFactory dsGatewayConnectionFactory() {
+        return ConnectionFactories.get(dsGatewayUri);
     }
 
 
     @Bean
-    public R2dbcEntityOperations dsUserEntityTemplate(@Qualifier("dsUserConnectionFactory") ConnectionFactory connectionFactory) {
+    public R2dbcEntityOperations dsGatewayEntityTemplate(@Qualifier("dsGatewayConnectionFactory") ConnectionFactory connectionFactory) {
         DefaultReactiveDataAccessStrategy strategy = new DefaultReactiveDataAccessStrategy(MySqlDialect.INSTANCE);
         DatabaseClient databaseClient = DatabaseClient.builder()
                 .connectionFactory(connectionFactory)

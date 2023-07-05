@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.config;
+package com.latmn.kangaroo.platform.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
-package com.latmn.kangaroo.platform.news.repository.impl;
+package com.latmn.kangaroo.platform.gateway.repository.impl;
 
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
-import com.latmn.kangaroo.platform.news.repository.RBACUserRepository;
+import com.latmn.kangaroo.platform.gateway.repository.RBACUserRepository;
 import dev.miku.r2dbc.mysql.MySqlConnectionFactory;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;

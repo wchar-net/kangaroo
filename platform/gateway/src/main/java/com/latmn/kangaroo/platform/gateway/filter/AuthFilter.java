@@ -1,11 +1,11 @@
-package com.latmn.kangaroo.platform.news.filter;
+package com.latmn.kangaroo.platform.gateway.filter;
 
 import com.latmn.kangaroo.framework.core.define.Define;
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
-import com.latmn.kangaroo.platform.news.repository.DbRouteRepository;
-import com.latmn.kangaroo.platform.news.repository.RBACUserRepository;
-import com.latmn.kangaroo.platform.news.util.PathUtil;
-import com.latmn.kangaroo.platform.news.util.WriteUtil;
+import com.latmn.kangaroo.platform.gateway.repository.DbRouteRepository;
+import com.latmn.kangaroo.platform.gateway.repository.RBACUserRepository;
+import com.latmn.kangaroo.platform.gateway.util.PathUtil;
+import com.latmn.kangaroo.platform.gateway.util.WriteUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

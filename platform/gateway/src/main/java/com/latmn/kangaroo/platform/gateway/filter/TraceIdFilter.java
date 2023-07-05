@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.filter;
+package com.latmn.kangaroo.platform.gateway.filter;
 
 import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
 import org.slf4j.Logger;

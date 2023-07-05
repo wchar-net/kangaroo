@@ -1,4 +1,4 @@
-package com.latmn.kangaroo.platform.news.util;
+package com.latmn.kangaroo.platform.gateway.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.latmn.kangaroo.framework.core.define.Define;

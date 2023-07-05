@@ -1,6 +1,6 @@
-package com.latmn.kangaroo.platform.news.config;
+package com.latmn.kangaroo.platform.gateway.config;
 
-import com.latmn.kangaroo.platform.news.repository.DbRouteRepository;
+import com.latmn.kangaroo.platform.gateway.repository.DbRouteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
