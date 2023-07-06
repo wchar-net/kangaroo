@@ -1,6 +1,6 @@
 # latmn inc. kangaroo
 
-### 表描述
+### 描述
 基于 `SpringCloud` `AlibabaCloud` `jdk17` `redis` `mysql` 
 
 采用 Spring Gateway Uri鉴权
@@ -34,9 +34,10 @@
 
 ### 运行
 
-#### 数据库 导入
-`gateway.sql`
-`user.sql`
+#### feign example
+```
+当前 user 调用 news
+```
 
 #### start nacos
 ```sh
@@ -45,8 +46,21 @@ http://127.0.0.1:8848/nacos/#/login
 nacos
 nacos
 ```
+#### 启动数据库
+导入
+`gateway.sql`
+`user.sql`
 
-#### feign example
+#### 启动redis
+    127.0.0.1 6379
+#### 启动 sentinel
+`platform sentinel README.md`
+
+#### 启动程序
+```shell
+sentinel  9999    
+gateway   80      9993(sentinel transport)
+user      8088    9992(sentinel transport)
+news      8089    9991(sentinel transport)
 ```
-当前 user 调用 news
-```
+`gateway负责路径鉴权`

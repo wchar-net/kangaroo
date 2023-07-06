@@ -7,6 +7,11 @@ server:
   address: 0.0.0.0
 
 spring:
+  cloud:
+    sentinel:
+      transport:
+        port: 9991
+        dashboard: 127.0.0.1:9999
   application:
     name: news
   servlet:
