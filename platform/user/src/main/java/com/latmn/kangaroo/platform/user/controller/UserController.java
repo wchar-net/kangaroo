@@ -8,12 +8,13 @@ import com.latmn.kangaroo.framework.core.cache.ICache;
 import com.latmn.kangaroo.framework.core.define.Define;
 import com.latmn.kangaroo.framework.core.domain.UserDomain;
 import com.latmn.kangaroo.framework.core.exception.UserException;
-import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
+import com.latmn.kangaroo.framework.core.util.IdUtil;
 import com.latmn.kangaroo.platform.user.model.vo.CaptchaVo;
 import com.latmn.kangaroo.platform.user.model.vo.UserLoginVo;
 import com.latmn.kangaroo.platform.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class UserController {
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 90, 4, 100);
         String imageBase64Data = lineCaptcha.getImageBase64();
 
-        String captchaHeader = TraceIdUtil.uuid32();
+        String captchaHeader = IdUtil.uuid32();
         String captchaVale = lineCaptcha.getCode();
         //3分钟内有效
         redisCache.put(Define.CACHE_CAPTCHA_PREFIX + captchaHeader, captchaVale, 3, TimeUnit.MINUTES);
@@ -82,8 +83,18 @@ public class UserController {
         //删除redis缓存
         redisCache.delete(Define.CACHE_CAPTCHA_PREFIX + userLoginVo.getCaptchaHeader());
         //30天
-        String authToken = TraceIdUtil.uuid32();
+        String authToken = IdUtil.uuid32();
         redisCache.put(Define.CACHE_USER_PREFIX + authToken, domain, 30, TimeUnit.DAYS);
         return authToken;
+    }
+
+
+    @Operation(summary = "获取用户信息")
+    @GetMapping("/getUserInfo")
+    public UserDomain getUser(
+            HttpServletRequest request
+    ) {
+        String userId = request.getHeader(Define.USER_REQUEST_KEY);
+        return userService.getUserInfo(userId);
     }
 }

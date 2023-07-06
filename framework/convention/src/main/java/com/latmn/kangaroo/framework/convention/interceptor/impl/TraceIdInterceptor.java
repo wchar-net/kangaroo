@@ -1,7 +1,7 @@
 package com.latmn.kangaroo.framework.convention.interceptor.impl;
 
 import com.latmn.kangaroo.framework.convention.interceptor.ConventionInterceptor;
-import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
+import com.latmn.kangaroo.framework.core.util.IdUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
@@ -10,10 +10,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class TraceIdInterceptor implements ConventionInterceptor {
-    public static final String TRACE_ID = TraceIdUtil.TRACE_ID;
+    public static final String TRACE_ID = IdUtil.TRACE_ID;
 
     @Override
     public int order() {
@@ -34,7 +33,7 @@ public class TraceIdInterceptor implements ConventionInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String traceId = getTraceId(request);
         if (!StringUtils.hasText(traceId)) {
-            traceId = TraceIdUtil.uuid32();
+            traceId = IdUtil.uuid32();
         }
         MDC.clear();
         MDC.put(TRACE_ID, traceId);

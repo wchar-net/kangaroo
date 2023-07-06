@@ -7,4 +7,7 @@ import com.latmn.kangaroo.platform.user.model.po.UserPo;
 public interface UserService extends IService<UserPo> {
 
     UserDomain login(String userCode, String userPwd);
+
+
+    UserDomain getUserInfo(String id);
 }

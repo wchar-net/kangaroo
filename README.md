@@ -57,7 +57,6 @@ nacos
 下载:
 ```shell
 https://github.com/alibaba/Sentinel/releases/download/2.0.0-alpha/sentinel-dashboard-2.0.0-alpha-preview.jar
-
 ```
 启动:
 ```

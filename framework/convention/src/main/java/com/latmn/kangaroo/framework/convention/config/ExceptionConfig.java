@@ -8,7 +8,7 @@ import com.latmn.kangaroo.framework.core.exception.KangarooException;
 import com.latmn.kangaroo.framework.core.result.FieldResult;
 import com.latmn.kangaroo.framework.core.result.Result;
 import com.latmn.kangaroo.framework.core.util.ExceptionUtil;
-import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
+import com.latmn.kangaroo.framework.core.util.IdUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -153,7 +153,7 @@ public class ExceptionConfig {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
         if (!StringUtils.hasText(requestId)) {
-            requestId = TraceIdUtil.uuid32();
+            requestId = IdUtil.uuid32();
             MDC.clear();
             MDC.put(TraceIdInterceptor.TRACE_ID, requestId);
             response.addHeader(TraceIdInterceptor.TRACE_ID, requestId);

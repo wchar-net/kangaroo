@@ -1,15 +1,19 @@
 package com.latmn.kangaroo.platform.user.controller;
 
+import com.latmn.kangaroo.framework.core.define.Define;
+import com.latmn.kangaroo.framework.core.domain.UserDomain;
 import com.latmn.kangaroo.framework.core.result.PageResult;
 import com.latmn.kangaroo.platform.api.news.NewsFeign;
 import com.latmn.kangaroo.platform.api.news.domain.NewsTestDomain;
 import com.latmn.kangaroo.framework.core.result.Result;
 import com.latmn.kangaroo.platform.user.model.vo.TestVo;
 import com.latmn.kangaroo.platform.user.service.TestService;
+import com.latmn.kangaroo.platform.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +25,18 @@ public class TestController {
 
     private final TestService testService;
     private final NewsFeign newsFeign;
+    private final UserService userService;
 
-    public TestController(TestService testService, NewsFeign newsFeign) {
+    public TestController(TestService testService, NewsFeign newsFeign, UserService userService) {
         this.testService = testService;
         this.newsFeign = newsFeign;
+        this.userService = userService;
+    }
+
+    @GetMapping("/test003")
+    public UserDomain test003(HttpServletRequest request) {
+        String userId = request.getHeader(Define.USER_REQUEST_KEY);
+        return userService.getUserInfo(userId);
     }
 
     @GetMapping("/testFeign2")

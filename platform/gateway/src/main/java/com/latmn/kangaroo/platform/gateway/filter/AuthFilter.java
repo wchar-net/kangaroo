@@ -22,6 +22,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER;
@@ -82,6 +83,16 @@ public class AuthFilter implements GlobalFilter, Ordered {
                                                         logger.info(Define.AUTH_TOKEN_ABSENT + ": {}", userDomain);
                                                         return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_TOKEN_ABSENT, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
                                                     } else {
+                                                        //用户是否过期
+                                                        LocalDateTime expireTime = user.getExpireTime();
+                                                        if (null != expireTime) {
+                                                            LocalDateTime currentTime = LocalDateTime.now();
+                                                            if (currentTime.isAfter(expireTime)) {
+                                                                logger.info("用户已经过期! userDomain = {}, expireTime = {},currentTime = {} ", user, expireTime, currentTime);
+                                                                return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.AUTH_TOKEN_ABSENT, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);
+                                                            }
+                                                        }
+                                                        //用户状态
                                                         Integer userState = user.getUserState();
                                                         if (null == userState) {
                                                             logger.info("用户状态配置不正确: {}", userDomain);
@@ -94,7 +105,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
                                                                         .flatMap(userUri -> {
                                                                             boolean flag = PathUtil.pathMatch(request.getPath().toString(), userUri);
                                                                             if (flag) {
-                                                                                return chain.filter(exchange);
+                                                                                ServerHttpRequest mutateRequest = request.mutate().header(Define.USER_REQUEST_KEY, userDomain.getId()).build();
+                                                                                return chain.filter((exchange.mutate().request(mutateRequest).build()));
                                                                             } else {
                                                                                 logger.info("无权限访问! user: {}  path: {}", userDomain, request.getPath());
                                                                                 return WriteUtil.error(exchange, WriteUtil.authFailResult(Define.AUTH_ERROR_CODE, Define.PATH_ACCESS_NOT_POWER, requestId, request.getPath().toString()), HttpStatus.FORBIDDEN);

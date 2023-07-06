@@ -14,9 +14,12 @@ public class Define {
     public static final String PATH_ACCESS_NOT_POWER = "无权限访问此路径!";
     public static final String AUTH_ERROR_MESSAGE = "认证失败!";
 
-    public static final String AUTH_TOKEN_ABSENT = "非法用户信息,此用户不存在,或被禁用,请重新登录!";
-    public static final String SUCCESS_CODE = "1";
+    public static final String USER_ID_NOT_EMPTY = "用户id不能为空!";
 
+    public static final String AUTH_TOKEN_ABSENT = "非法用户信息,此用户不存在,或被禁用,请重新登录!";
+    public static final String USER_REQUEST_KEY = "x-user-id";
+    public static final String SUCCESS_CODE = "1";
+    public static final String API_KEY_NOT_EMPTY = AUTH_HEADER_NAME + " 不能为空!";
     public static final String CAPTCHA_NOT_EXIST = "验证码不存在!";
     public static final String CAPTCHA_NOT_INCORRECT = "验证码不正确!";
 

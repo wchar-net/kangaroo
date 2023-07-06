@@ -1,6 +1,6 @@
 package com.latmn.kangaroo.platform.gateway.filter;
 
-import com.latmn.kangaroo.framework.core.util.TraceIdUtil;
+import com.latmn.kangaroo.framework.core.util.IdUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -24,9 +24,9 @@ public class TraceIdFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String traceId = TraceIdUtil.uuid32();
-        ServerHttpRequest request = exchange.getRequest().mutate().header(TraceIdUtil.TRACE_ID, traceId).build();
-        MDC.put(TraceIdUtil.TRACE_ID, traceId);
+        String traceId = IdUtil.uuid32();
+        ServerHttpRequest request = exchange.getRequest().mutate().header(IdUtil.TRACE_ID, traceId).build();
+        MDC.put(IdUtil.TRACE_ID, traceId);
         XForwardedRemoteAddressResolver resolver = XForwardedRemoteAddressResolver.maxTrustedIndex(1);
         InetSocketAddress inetSocketAddress = resolver.resolve(exchange);
         String hostAddress = inetSocketAddress.getAddress().getHostAddress();
