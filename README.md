@@ -61,7 +61,7 @@ https://github.com/alibaba/Sentinel/releases/download/2.0.0-alpha/sentinel-dashb
 ```
 启动:
 ```
-java -Dserver.port=9999 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
+java -Dserver.port=9999 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-2.0.0-alpha-preview.jar
 ```
 
 #### 启动程序
