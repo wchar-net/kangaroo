@@ -54,7 +54,15 @@ nacos
 #### 启动redis
     127.0.0.1 6379
 #### 启动 sentinel
-`platform sentinel README.md`
+下载:
+```shell
+https://github.com/alibaba/Sentinel/releases/download/2.0.0-alpha/sentinel-dashboard-2.0.0-alpha-preview.jar
+
+```
+启动:
+```
+java -Dserver.port=9999 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
+```
 
 #### 启动程序
 ```shell
